@@ -1,0 +1,129 @@
+.case-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.case-window {
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 4px solid #6c6c6c;
+  position: relative;
+  height: 70vh;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+.case-strip {
+  display: flex;
+  justify-content: flex-start; /* we'll handle centering via JS */
+  align-items: center;
+  transition: none; /* fast spin */
+}
+
+
+.case-strip.decelerate {
+  transition: transform 8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.case-item {:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+  min-width: 35vw;
+  text-align: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.case-item img {
+  width: 34vw;
+  height: 60vh;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #333;
+}
+
+.case-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background: rgb(38, 255, 0);
+  transform: translateX(-50%);
+}
+
+.spin-btn, .stop-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  transition: 0.3s;
+}
+
+.stop-btn {
+  background: #dc3545;
+}
+
+.spin-btn:hover, .stop-btn:hover {
+  opacity: 0.8;
+}
+
+.big-item {
+  width: 300px;
+  height: 200px;
+  margin: 20px 0;
+  border-radius: 12px;
+  border: 3px solid gold;
+}
+
+.item-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: gold;
+}
