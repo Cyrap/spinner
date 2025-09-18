@@ -8,7 +8,6 @@ const items = [
   { id: 3, name: "M4A4 | Howl", img: "https://i.pinimg.com/736x/11/38/c5/1138c5f1e93d3f5e03dbd2d671eb0d11.jpg" },
   { id: 4, name: "Glock-18 | Fade", img: "https://i.pinimg.com/736x/87/be/36/87be36f66374a2188fa15eaf07f01b03.jpg" },
   { id: 5, name: "Karambit | Doppler", img: "https://i.pinimg.com/736x/79/8c/80/798c809403713ea9092827f8cfea06d2.jpg" },
-  { id: 6, name: "Desert Eagle | Blaze", img: "https://i.pinimg.com/736x/c6/4c/0e/c64c0e012db4cb285877d3496b88d8fe.jpg" },
 ];
 
 const CaseOpening = () => {
@@ -16,64 +15,105 @@ const CaseOpening = () => {
   const [isStopping, setIsStopping] = useState(false);
   const [finalItem, setFinalItem] = useState(null);
   const [translateX, setTranslateX] = useState(0);
+  const [counter, setCounter] = useState(0);
 
-  const containerRef = useRef(null);
+const whenToCallStopAfterSpinStarted = [4300, 5120, 6250, 7380, 8450];
+
+
+  const intervalRef = useRef(null);
+  const stopTimeoutRef = useRef(null);
+  const isSpinningRef = useRef(false);
+
+  const handleCounter = () => {
+    setCounter(prev => {
+      const newVal = prev >= 4 ? 0 : prev + 1;
+      console.log("Counter updated:", newVal);
+      return newVal;
+    });
+  };
 
   const spin = () => {
+    handleCounter();
     setIsSpinning(true);
+    isSpinningRef.current = true; // immediately reflect spinning
     setIsStopping(false);
     setFinalItem(null);
 
-    // Start infinite fast spin (looping items)
     let position = 0;
-    const speed = 40; // fast speed
-    const itemWidth = window.innerWidth * 0.35; // 35vw in pixels
-	const stripWidth = items.length * itemWidth; // each item ~260px wide
+    const speed = 40;
+    const itemWidth = window.innerWidth * 0.35;
+    const stripWidth = items.length * itemWidth;
 
-    containerRef.current = setInterval(() => {
+    // Start spinning
+    intervalRef.current = setInterval(() => {
       position -= speed;
       if (Math.abs(position) >= stripWidth) {
-        position = 0; // reset loop
+        position = 0; // loop continuously
       }
       setTranslateX(position);
     }, 30);
+
+    // Schedule automatic stop based on counter
+    const stopDelay = whenToCallStopAfterSpinStarted[counter % whenToCallStopAfterSpinStarted.length];
+    console.log("Stop will be called after (ms):", stopDelay);
+
+    stopTimeoutRef.current = setTimeout(() => {
+      console.log("Automatic stop triggered");
+      stopSpin();
+    }, stopDelay);
   };
 
   const stopSpin = () => {
-  if (!isSpinning) return;
-  clearInterval(containerRef.current);
+    console.log("StopSpin called. isSpinningRef:", isSpinningRef.current);
 
-  setIsStopping(true);
+    if (!isSpinningRef.current) return;
 
-  const winningIndex = Math.floor(Math.random() * items.length);
+    clearInterval(intervalRef.current);
+    clearTimeout(stopTimeoutRef.current);
 
-   const itemWidth = window.innerWidth * 0.35;
+    setIsStopping(true);
+    isSpinningRef.current = false; // block further stop calls
+
+    const winningIndex = counter
+    console.log("Winning index:", winningIndex);
+
+    const itemWidth = window.innerWidth * 0.35;
     const totalStripWidth = items.length * itemWidth;
+    const extraRotations = 5;
 
-  const extraRotations = 5; // how many times strip passes full length
+    const finalPos = -((extraRotations * totalStripWidth + winningIndex * itemWidth) % (totalStripWidth * 2));
+    console.log("Final position:", finalPos);
 
-  // Because we duplicated items in render, max translateX should not exceed stripWidth
-  // Use modulo to wrap around
-  const finalPos =
-    -((extraRotations * totalStripWidth + winningIndex * itemWidth) % (totalStripWidth * 2));
+    setTranslateX(finalPos);
 
-  setTranslateX(finalPos);
-
-  setTimeout(() => {
-    setIsSpinning(false);
-    setIsStopping(false);
-    setFinalItem(items[winningIndex]);
-  }, 8000); // matches CSS transition
-};
-
+    setTimeout(() => {
+      console.log("Spin ended. Winning item:", items[winningIndex]);
+      setIsSpinning(false);
+      setIsStopping(false);
+      setFinalItem(items[winningIndex]);
+    }, 2000); // deceleration duration
+  };
 
   return (
-    <div className="case-container">
+	<>
+	{
+		finalItem ? <>
+		 <div className="case-item">
+              <img src={finalItem?.img} alt={finalItem?.name} />
+              <p>{finalItem?.name}</p>
+            </div>
+		<button className="spin-btn" onClick={spin}>
+			Дахин эргүүлэх
+			</button>
+		</>
+		:
+		 <div className="case-container">
       <div className="case-window">
         <div
           className={`case-strip ${isStopping ? "decelerate" : ""}`}
           style={{ transform: `translateX(${translateX}px)` }}
         >
+          {/* Duplicate items to make continuous spin seamless */}
           {items.concat(items).map((item, idx) => (
             <div key={idx} className="case-item">
               <img src={item.img} alt={item.name} />
@@ -97,11 +137,15 @@ const CaseOpening = () => {
       )}
 
       {finalItem && (
-		<button className="spin-btn" onClick={spin}>
-			Дахин эргүүлэх
-		</button>
+        <button className="spin-btn" onClick={spin}>
+          Дахин эргүүлэх
+        </button>
       )}
     </div>
+
+	}
+   
+	</>
   );
 };
 
