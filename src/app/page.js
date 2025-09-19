@@ -3,11 +3,16 @@ import React, { useState, useRef } from "react";
 import "./CaseOpening.css";
 
 const items = [
-  { id: 1, name: "AK-47 | Redline", img: "https://i.pinimg.com/736x/4d/78/9a/4d789a7d00d42df3c96ac808756ccc15.jpg" },
-  { id: 2, name: "AWP | Asiimov", img: "https://i.pinimg.com/736x/1a/c3/e0/1ac3e098a2cebdaeefa31663d04abe1c.jpg" },
-  { id: 3, name: "M4A4 | Howl", img: "https://i.pinimg.com/736x/11/38/c5/1138c5f1e93d3f5e03dbd2d671eb0d11.jpg" },
-  { id: 4, name: "Glock-18 | Fade", img: "https://i.pinimg.com/736x/87/be/36/87be36f66374a2188fa15eaf07f01b03.jpg" },
-  { id: 5, name: "Karambit | Doppler", img: "https://i.pinimg.com/736x/79/8c/80/798c809403713ea9092827f8cfea06d2.jpg" },
+  { id: 1, name: "sad", img: "https://i.pinimg.com/736x/df/3f/5f/df3f5fa2ac5eded91bdd472b26a0d6a5.jpg" },
+  // sad
+  { id: 2, name: "angry", img: "https://i.pinimg.com/736x/a6/6c/3e/a66c3e5ec81792f07aeba723c7155bfd.jpg" },
+  // angry
+  { id: 3, name: "", img: "https://i.pinimg.com/736x/ec/13/a7/ec13a753972c254761be4d9d5666d341.jpg" },
+  // 
+  { id: 4, name: "", img: "https://i.pinimg.com/736x/0f/43/c8/0f43c89bc0ba2f038eb589f8f7727816.jpg" },
+  // 
+  { id: 5, name: "", img: "https://i.pinimg.com/736x/a7/d4/65/a7d4653644eaa6dd28c7f594675de7c8.jpg" },
+  // crying
 ];
 
 const CaseOpening = () => {
